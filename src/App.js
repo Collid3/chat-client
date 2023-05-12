@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useContext } from "react";
+import UserContext from "./context/UserContext";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/Home";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const { me } = useContext(UserContext);
+
+	console.log(me);
+
+	return (
+		<div className="App">
+			{me ? (
+				<Home />
+			) : (
+				<Routes>
+					<>
+						<Route path="/*" element={<Navigate to="/" replace />} />
+						<Route path="/" element={<Login />} />
+						<Route path="register" element={<Register />} />
+					</>
+				</Routes>
+			)}
+		</div>
+	);
 }
 
 export default App;
