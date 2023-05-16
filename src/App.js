@@ -9,8 +9,6 @@ import Home from "./pages/Home";
 function App() {
 	const { me } = useContext(UserContext);
 
-	console.log(me);
-
 	return (
 		<div className="App">
 			{me ? (
@@ -18,8 +16,8 @@ function App() {
 			) : (
 				<Routes>
 					<>
-						<Route path="/*" element={<Navigate to="/" replace />} />
-						<Route path="/" element={<Login />} />
+						<Route path="/*" element={<Navigate to="/login" replace />} />
+						<Route path="/login" element={<Login />} />
 						<Route path="register" element={<Register />} />
 					</>
 				</Routes>

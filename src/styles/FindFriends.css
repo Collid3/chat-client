@@ -1,0 +1,54 @@
+.find-friends-container {
+	flex: 2;
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+	background-color: royalblue;
+	height: 100vh;
+	max-height: 100vh;
+}
+
+.find-friends-container > section {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 10px;
+	margin-bottom: 10px;
+}
+
+.find-friends-container > section svg {
+	font-size: 2rem;
+	cursor: pointer;
+}
+
+.find-friends-container > section svg:hover {
+	color: coral;
+}
+
+.friends-container {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	padding: 10px;
+}
+
+.friends-container li {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	cursor: default;
+}
+
+.friends-container li h3 {
+	width: 100%;
+	text-align: left;
+}
+
+.friends-container li button {
+	border: none;
+	padding: 5px 15px;
+	border-radius: 10px;
+	margin-right: 5px;
+	cursor: pointer;
+	font-size: 1rem;
+}

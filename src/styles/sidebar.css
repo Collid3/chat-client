@@ -1,0 +1,83 @@
+.sidebar-container {
+	flex: 2;
+	background-color: royalblue;
+	padding: 10px;
+	height: 100vh;
+	max-height: 100vh;
+}
+
+.sidebar-container > section {
+	display: flex;
+	align-items: center;
+	position: relative;
+	margin-bottom: 5px;
+}
+
+.sidebar-container > section h2 {
+	width: 100%;
+	text-align: left;
+}
+
+.sidebar-container > section svg {
+	font-size: 2.2rem;
+	cursor: pointer;
+}
+
+.sidebar-menu-container {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: max(20%, 220px);
+	background-color: cornflowerblue;
+	padding: 10px 12px;
+	border-radius: 10px;
+	align-self: flex-end;
+	list-style: none;
+	position: absolute;
+	right: 5px;
+	top: 30px;
+	user-select: none;
+}
+
+.closed-menu-container {
+	display: flex;
+	gap: 10px;
+	padding-right: 5px;
+}
+
+.closed-menu-container svg {
+	width: 100%;
+}
+
+.sidebar-menu-container li {
+	outline: 1px solid white;
+	padding: 5px;
+	border-radius: 20px;
+	cursor: pointer;
+}
+
+.sidebar-menu-container li:hover {
+	background-color: royalblue;
+}
+
+.sidebar-contacts-container {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	padding: 10px;
+	list-style: none;
+}
+
+.contact {
+	outline: 2px solid white;
+	border-radius: 20px;
+	padding: 10px 15px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+}
+
+.contact h4 {
+	width: 100%;
+	text-align: left;
+}

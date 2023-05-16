@@ -1,8 +1,11 @@
 import React, { useContext, useRef, useState } from "react";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, db } from "../config/firebaseConfig";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import UserContext from "../context/UserContext";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { updateProfile } from "firebase/auth";
+import { auth, db } from "../config/firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
+import { Link } from "react-router-dom";
+import { api } from "../api/apiCall";
 
 const Register = () => {
 	const { setMe } = useContext(UserContext);
@@ -16,81 +19,66 @@ const Register = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+
 		if (
+			inputs.email.current.value === "" ||
 			inputs.username.current.value === "" ||
-			inputs.password.current.value === "" ||
-			!inputs.email.current.value === ""
+			inputs.password.current.value === ""
 		) {
-			return setError("Email, username and password required");
+			return setError("Email, username and password are required");
 		}
 
+		if (inputs.password.current.value.length < 6) {
+			return setError("Password too short. Must be a minimum of 6 characters");
+		}
+
+		// check for spaces and special characters in username
 		// eslint-disable-next-line no-useless-escape
-		const format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+		const format = /[!@#$%^&*()+\=\[\]{};':"\\|,.<>\/?]+/;
 
 		if (format.test(inputs.username.current.value)) {
-			return setError("No special characters allowed in a username");
+			return setError("Only _ and - special characters can be used in a username");
 		} else if (inputs.username.current.value.split(" ").length > 1) {
-			return setError("Username should not have spaces or special characters");
+			return setError("Spaces are not allowed in a username");
 		}
 
 		try {
-			const q = await query(
-				collection(db, "users"),
-				where("username", "==", inputs.username.current.value)
-			);
+			const newUser = {
+				email: inputs.email.current.value,
+				username: inputs.username.current.value,
+				hasAvatar: false,
+				avatar: "none",
+				isOnline: false,
+				requests: [],
+			};
 
-			const docRef = await getDocs(q);
+			// save to mongoDB
+			await api.post("/users", newUser);
 
-			let User = "";
-			docRef.forEach((doc) => (User = doc.data()));
-
-			if (User.username === inputs.username.current.value) {
-				return setError("Username or email already exists");
-			}
-
+			// create account on firebase
 			await createUserWithEmailAndPassword(
 				auth,
 				inputs.email.current.value,
 				inputs.password.current.value
-			);
-
-			await updateProfile(auth.currentUser, {
-				displayName: inputs.username.current.value,
-			});
-
-			// 			const imageName = !imageUpload ? "noProfile" : imageUpload.name + uuid;
-			//
-			// 			if (!imageUpload) {
-			// 				await updateProfile(auth.currentUser, {
-			// 					photoURL: imageName,
-			// 				});
-			// 			} else {
-			// 				const imageRef = ref(storage, `/profilePictures/${imageName}`);
-			// 				await uploadBytes(imageRef, imageUpload);
-			// 				const url = await getDownloadURL(imageRef);
-			// 				await updateProfile(auth.currentUser, {
-			// 					photoURL: url,
-			// 				});
-			// 			}
-
-			await addDoc(collection(db, "users"), {
-				_id: auth.currentUser.uid,
-				username: auth.currentUser.displayName,
-				email: auth.currentUser.email,
-				// imageUrl: auth.currentUser.photoURL,
-				// imageName: imageName,
-				requests: [],
-				// friends: [],
-				// chatRooms: [],
-			});
-
-			setMe({
-				_id: auth.currentUser.uid,
-				username: auth.currentUser.displayName,
-				requests: [],
+			).then(async (userCred) => {
+				await updateProfile(auth.currentUser, {
+					displayName: userCred.user.displayName,
+				});
 			});
 		} catch (err) {
-			console.log(err.message);
+			// eslint-disable-next-line default-case
+			switch (err.message) {
+				case "Firebase: Error (auth/invalid-email).":
+					setError("Invalid Email address");
+					break;
+
+				case "Firebase: Password should be at least 6 characters (auth/weak-password).":
+					setError("Password too short. Must be a minimum of 6 characters");
+					break;
+
+				case "Firebase: Error (auth/email-already-in-use).":
+					setError("Username or email already exists");
+			}
 		}
 	};
 
@@ -112,12 +100,23 @@ const Register = () => {
 					</p>
 				)}
 
-				<input type="text" placeholder="email Address" ref={inputs.email} />
+				<input
+					type="email"
+					placeholder="Email Address"
+					ref={inputs.email}
+					spellCheck={false}
+				/>
 				<input type="text" placeholder="Username" ref={inputs.username} />
 				<input type="password" placeholder="Password" ref={inputs.password} />
 
-				<button type="submit">Login</button>
-				<button>Forgot Password</button>
+				<button type="submit">Register</button>
+
+				<p>
+					Already have an account?{" "}
+					<span>
+						<Link to="/login">Login</Link>{" "}
+					</span>{" "}
+				</p>
 			</form>
 		</div>
 	);

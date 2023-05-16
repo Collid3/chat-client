@@ -2,19 +2,10 @@
 	display: flex;
 }
 
-.sidebar-container {
-	flex: 1.5;
-}
-
 .main-chats-container {
+	padding: 10px;
 	flex: 3;
 	background-color: cornflowerblue;
-}
-
-.contact {
-	text-align: left;
-	padding: 12px 10px;
-	background-color: teal;
 }
 
 @media screen and (max-width: 756px) {
