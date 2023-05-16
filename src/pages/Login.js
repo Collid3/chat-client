@@ -4,12 +4,9 @@ import UserContext from "../context/UserContext";
 import { api } from "../api/apiCall";
 import { Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
-import { auth, db } from "../config/firebaseConfig";
+import { auth } from "../config/firebaseConfig";
 
 const Login = () => {
-	const { setMe, me } = useContext(UserContext);
-
 	const inputs = {
 		username: useRef(""),
 		password: useRef(""),
@@ -21,12 +18,43 @@ const Login = () => {
 			return setError("Username and password required");
 		}
 
-		const response = await api.get(`/users/${inputs.username.current.value}`);
-		const email = response.data.user.email;
+		if (inputs.password.current.value.length < 6) {
+			return setError("Password too short. Must be a minimum of 6 characters");
+		}
 
-		// const docRef = doc(db, "users", me._id);
+		try {
+			const response = await api.get(`/users/user/${inputs.username.current.value}`);
+			const email = response.data.user.email;
 
-		await signInWithEmailAndPassword(auth, email, inputs.password.current.value);
+			await signInWithEmailAndPassword(auth, email, inputs.password.current.value);
+		} catch (err) {
+			// eslint-disable-next-line default-case
+			switch (err.message) {
+				case "Firebase: Error (auth/network-request-failed).":
+					setError("No internet conection. Check your wifi or mobile data and try again");
+					break;
+
+				case "Firebase: Password should be at least 6 characters (auth/weak-password).":
+					setError("Password too short. Must be a minimum of 6 characters");
+					break;
+
+				case "Firebase: Error (auth/invalid-email).":
+					setError("Incorrect username or password. Try again");
+					break;
+
+				case "Firebase: Error (auth/wrong-password).":
+					setError("Incorrect username or password. Try again");
+					break;
+
+				case "Firebase: Error (auth/user-not-found).":
+					setError("Incorrect username or password. Try again");
+					break;
+
+				case "Request failed with error: undefined":
+					setError("No internet conection. Check your wifi or mobile data and try again");
+					break;
+			}
+		}
 	};
 
 	return (
