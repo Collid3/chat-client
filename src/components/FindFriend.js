@@ -2,15 +2,12 @@ import "../styles/FindFriends.css";
 import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../context/UserContext";
 import { api } from "../api/apiCall";
-import { collection, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-
-import { auth, db } from "../config/firebaseConfig";
 
 import { MdKeyboardBackspace } from "react-icons/md";
 
 const FindFriend = () => {
-	const { me, socket } = useContext(UserContext);
+	const { me, socket, onlineUsers, setMe } = useContext(UserContext);
 
 	const [users, setUsers] = useState([]);
 	const [error, setError] = useState("");
@@ -20,8 +17,26 @@ const FindFriend = () => {
 
 	const addFriend = async (friendId) => {
 		try {
+			const response = await api.post(`/requests/${friendId}`, {
+				sender: userId,
+				receiver: friendId,
+			});
+
+			const response1 = await api.post(`/requests/${userId}`, {
+				sender: userId,
+				receiver: friendId,
+			});
+
+			const friend = onlineUsers.find((user) => user.userId === friendId);
+			if (friend) {
+				console.log("sending request");
+				socket.emit("send-request", {
+					to: friend.socketId,
+					updatedUser: response.data.user,
+				});
+			}
+			setMe(response1.data.user);
 			const newUsers = users.filter((user) => user._id !== friendId);
-			socket.emit("send-request", { to: friendId, from: userId });
 			setUsers(newUsers);
 			return setError("");
 		} catch (error) {
@@ -32,19 +47,22 @@ const FindFriend = () => {
 	useEffect(() => {
 		if (!me) return;
 		const fetchUsers = async () => {
-			const querySnapshot = await getDocs(collection(db, "users"));
-			const fetchedUsers = [];
+			const response = await api.get(`/users/${userId}`);
 
-			querySnapshot.forEach((snap) => fetchedUsers.push(snap.data()));
-			setUsers(fetchedUsers.filter((user) => user._id !== me._id));
-
-			// const response = await api.get(`/users/${userId}`);
+			setUsers(
+				response.data.users.filter(
+					(user) =>
+						user.requests.find(
+							(request) => request.sender === me._id || request.receiver === me._id
+						) === undefined
+				)
+			);
 		};
 
 		fetchUsers();
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [me]);
 
 	return (
 		<div className="find-friends-container">

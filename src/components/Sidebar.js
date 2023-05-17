@@ -19,13 +19,17 @@ const Sidebar = () => {
 				{!menu ? (
 					<div className="closed-menu-container">
 						<FiMenu onClick={() => setMenu(true)} />
-						{me.requests.length > 0 && <p>{me.requests.length}</p>}
+						{me.requests.filter((request) => request.sender !== me._id).length > 0 && (
+							<p>
+								{me.requests.filter((request) => request.sender !== me._id).length}
+							</p>
+						)}
 					</div>
 				) : (
 					<RxCross2 onClick={() => setMenu(false)} />
 				)}
 
-				{menu && <SidebarMenu setMe={setMe} />}
+				{menu && <SidebarMenu setMe={setMe} me={me} />}
 			</section>
 
 			<ul className="sidebar-contacts-container">

@@ -2,8 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { protectedApi, api } from "../api/apiCall";
 import { io } from "socket.io-client";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "../config/firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import { auth } from "../config/firebaseConfig";
 const UserContext = createContext({});
 const socket = io.connect("http://localhost:5000");
 
@@ -11,6 +10,7 @@ export const UserProvider = ({ children }) => {
 	const [me, setMe] = useState(null);
 	const [contacts, setContacts] = useState([]);
 	const [selectedContact, setSelectedContact] = useState(null);
+	const [onlineUsers, setOnlineUsers] = useState([]);
 
 	useEffect(() => {
 		onAuthStateChanged(auth, async (owner) => {
@@ -23,10 +23,9 @@ export const UserProvider = ({ children }) => {
 
 			try {
 				const response = await api.get(`/users/contacts/${userData.data.user._id}`);
-
 				setContacts(response.data.users);
 
-				socket.emit("addUser", owner.uid);
+				socket.emit("addUser", userData.data.user._id);
 
 				socket.on("getUsers", (users) => {
 					const newContacts = response.data.users.map((user) =>
@@ -36,10 +35,16 @@ export const UserProvider = ({ children }) => {
 					);
 
 					setContacts(newContacts);
+					setOnlineUsers(users);
 				});
 
-				socket.on("recieve-request", (data) => {
-					setMe({ ...me, requests: me.request.push(data.from) });
+				socket.on("request-accepted", (data) => {
+					setMe(data.me);
+				});
+
+				socket.on("receive-request", (data) => {
+					console.log("Got the request bud");
+					setMe(data);
 				});
 			} catch (err) {
 				console.log(err.message);
@@ -59,7 +64,15 @@ export const UserProvider = ({ children }) => {
 
 	return (
 		<UserContext.Provider
-			value={{ contacts, me, setMe, selectedContact, setSelectedContact, socket }}>
+			value={{
+				contacts,
+				me,
+				setMe,
+				selectedContact,
+				setSelectedContact,
+				socket,
+				onlineUsers,
+			}}>
 			{children}
 		</UserContext.Provider>
 	);
