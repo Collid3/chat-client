@@ -6,7 +6,7 @@ import { FiMenu } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
 
 const Sidebar = () => {
-	const { contacts, me, setSelectedContact, setMe } = useContext(UserContext);
+	const { contacts, me, setSelectedChat, setMe } = useContext(UserContext);
 	const [menu, setMenu] = useState(false);
 
 	return (
@@ -34,7 +34,7 @@ const Sidebar = () => {
 
 			<ul className="sidebar-contacts-container">
 				{contacts.map((user) => (
-					<li className="contact" key={user._id} onClick={() => setSelectedContact(user)}>
+					<li className="contact" key={user._id} onClick={() => setSelectedChat(user)}>
 						<h4>{user.username}</h4>
 
 						<p>{user.isOnline ? "Online" : "Offline"}</p>

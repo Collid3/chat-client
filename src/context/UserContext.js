@@ -9,7 +9,7 @@ const socket = io.connect("http://localhost:5000");
 export const UserProvider = ({ children }) => {
 	const [me, setMe] = useState(null);
 	const [contacts, setContacts] = useState([]);
-	const [selectedContact, setSelectedContact] = useState(null);
+	const [selectedChat, setSelectedChat] = useState(null);
 	const [onlineUsers, setOnlineUsers] = useState([]);
 	const [loading, setLoading] = useState(true);
 
@@ -56,16 +56,6 @@ export const UserProvider = ({ children }) => {
 		});
 	}, []);
 
-	useEffect(() => {
-		if (!selectedContact) return;
-
-		const fetchMessages = async (id) => {
-			const response = await api.get(`/messages/${selectedContact._id}`);
-		};
-
-		return () => fetchMessages();
-	}, [selectedContact]);
-
 	return (
 		<UserContext.Provider
 			value={{
@@ -73,8 +63,8 @@ export const UserProvider = ({ children }) => {
 				contacts,
 				me,
 				setMe,
-				selectedContact,
-				setSelectedContact,
+				selectedChat,
+				setSelectedChat,
 				socket,
 				onlineUsers,
 				setContacts,
