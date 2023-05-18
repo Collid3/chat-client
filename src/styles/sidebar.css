@@ -1,16 +1,19 @@
 .sidebar-container {
 	flex: 2;
-	background-color: royalblue;
-	padding: 10px;
+	background-color: black;
 	height: 100vh;
 	max-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	border-right: 2px solid white;
 }
 
 .sidebar-container > section {
 	display: flex;
 	align-items: center;
 	position: relative;
-	margin-bottom: 5px;
+	height: 60px;
+	padding: 0 10px;
 }
 
 .sidebar-container > section h2 {
@@ -28,14 +31,15 @@
 	flex-direction: column;
 	gap: 10px;
 	width: max(20%, 220px);
-	background-color: cornflowerblue;
+	background-color: black;
+	outline: 1px solid white;
 	padding: 10px 12px;
 	border-radius: 10px;
 	align-self: flex-end;
 	list-style: none;
 	position: absolute;
 	right: 5px;
-	top: 30px;
+	top: 50px;
 	user-select: none;
 }
 
@@ -52,7 +56,7 @@
 .sidebar-menu-container li {
 	outline: 1px solid white;
 	padding: 5px;
-	border-radius: 20px;
+	border-radius: 15px;
 	cursor: pointer;
 }
 
@@ -61,16 +65,16 @@
 }
 
 .sidebar-contacts-container {
+	flex-grow: 2;
 	display: flex;
 	flex-direction: column;
 	gap: 15px;
-	padding: 10px;
 	list-style: none;
+	background-color: royalblue;
 }
 
 .contact {
 	outline: 2px solid white;
-	border-radius: 20px;
 	padding: 10px 15px;
 	cursor: pointer;
 	display: flex;

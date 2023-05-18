@@ -7,11 +7,12 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 
 const Login = () => {
+	const [error, setError] = useState("");
+	const [loading, setLoading] = useState(false);
 	const inputs = {
 		username: useRef(""),
 		password: useRef(""),
 	};
-	const [error, setError] = useState("");
 
 	const handleLogin = async () => {
 		if (inputs.username.current.value === "" || inputs.password.current.value === "") {
@@ -22,11 +23,16 @@ const Login = () => {
 			return setError("Password too short. Must be a minimum of 6 characters");
 		}
 
+		setError("");
+		setLoading(true);
+
 		try {
 			const response = await api.get(`/users/user/${inputs.username.current.value}`);
 			const email = response.data.user.email;
 
 			await signInWithEmailAndPassword(auth, email, inputs.password.current.value);
+			setLoading(false);
+			setError("");
 		} catch (err) {
 			// eslint-disable-next-line default-case
 			switch (err.message) {
@@ -53,7 +59,11 @@ const Login = () => {
 				case "Request failed with error: undefined":
 					setError("No internet conection. Check your wifi or mobile data and try again");
 					break;
+				case "Request failed with status code 401":
+					setError("Incorrect username or password");
 			}
+
+			setLoading(false);
 		}
 	};
 
@@ -62,7 +72,7 @@ const Login = () => {
 			<h1>Login</h1>
 
 			<form className="auth-form" onSubmit={(e) => e.preventDefault()}>
-				{error && (
+				{error && !loading && (
 					<p
 						style={{
 							backgroundColor: "red",
@@ -72,6 +82,19 @@ const Login = () => {
 							transition: "ease-in .5s",
 						}}>
 						{error}
+					</p>
+				)}
+
+				{loading && !error && (
+					<p
+						style={{
+							backgroundColor: "orange",
+							padding: "5px",
+							textAlign: "center",
+							borderRadius: "10px",
+							transition: "ease-in .5s",
+						}}>
+						Loading...
 					</p>
 				)}
 

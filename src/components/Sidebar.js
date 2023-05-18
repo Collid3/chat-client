@@ -11,8 +11,6 @@ const Sidebar = () => {
 
 	return (
 		<div className="sidebar-container active">
-			<h1>Chats</h1>
-
 			<section>
 				<h2>{me.username}</h2>
 

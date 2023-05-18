@@ -12,6 +12,7 @@ export const UserProvider = ({ children }) => {
 	const [selectedChat, setSelectedChat] = useState(null);
 	const [onlineUsers, setOnlineUsers] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [messages, setMessages] = useState([]);
 
 	useEffect(() => {
 		onAuthStateChanged(auth, async (owner) => {
@@ -45,9 +46,13 @@ export const UserProvider = ({ children }) => {
 				});
 
 				socket.on("receive-request", (data) => {
-					console.log("Got the request bud");
 					setMe(data);
 				});
+
+				socket.on("receive-message", (data) => {
+					setMessages((prev) => [...prev, data.newMessage]);
+				});
+
 				setLoading(false);
 			} catch (err) {
 				console.log(err.message);
@@ -68,6 +73,8 @@ export const UserProvider = ({ children }) => {
 				socket,
 				onlineUsers,
 				setContacts,
+				messages,
+				setMessages,
 			}}>
 			{children}
 		</UserContext.Provider>
