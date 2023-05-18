@@ -7,22 +7,28 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 
 function App() {
-	const { me } = useContext(UserContext);
+	const { me, loading } = useContext(UserContext);
 
 	return (
-		<div className="App">
-			{me ? (
-				<Home />
+		<>
+			{loading ? (
+				<>Loading...</>
 			) : (
-				<Routes>
-					<>
-						<Route path="/*" element={<Navigate to="/login" replace />} />
-						<Route path="/login" element={<Login />} />
-						<Route path="register" element={<Register />} />
-					</>
-				</Routes>
+				<div className="App">
+					{me ? (
+						<Home />
+					) : (
+						<Routes>
+							<>
+								<Route path="/*" element={<Navigate to="/login" replace />} />
+								<Route path="/login" element={<Login />} />
+								<Route path="register" element={<Register />} />
+							</>
+						</Routes>
+					)}
+				</div>
 			)}
-		</div>
+		</>
 	);
 }
 

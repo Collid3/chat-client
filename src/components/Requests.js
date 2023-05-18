@@ -5,7 +5,7 @@ import { MdKeyboardBackspace } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 const Requests = () => {
-	const { me, socket, onlineUsers, setMe } = useContext(UserContext);
+	const { me, socket, onlineUsers, setMe, setContacts } = useContext(UserContext);
 
 	const [users, setUsers] = useState([]);
 	const navigate = useNavigate("");
@@ -28,7 +28,7 @@ const Requests = () => {
 		fetchUsers();
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [me.requests]);
 
 	const replyRequest = async (accept, friendId) => {
 		if (accept) {
@@ -41,22 +41,25 @@ const Requests = () => {
 			await api.post("/messageRoom", { senderId: friendId, receiverId: me._id });
 		}
 
-		const response = await api.put(`/requests/${me._id}`, {
+		const friendResponse = await api.put(`/requests/${friendId}`, {
 			sender: friendId,
-			reciever: me._id,
+			receiver: me._id,
 		});
 
-		const friendResponse = await api.put(`/requests/${friendId}`, {
+		const response = await api.put(`/requests/${userId}`, {
 			sender: friendId,
 			receiver: me._id,
 		});
 
 		// update if they are online
 		const friend = onlineUsers.find((user) => user.userId === friendId);
-		console.log(friend);
 
 		if (friend) {
-			socket.emit("accept-request", { to: friend.socketId, me: friendResponse.data.user });
+			socket.emit("accept-request", {
+				to: friend.socketId,
+				me: friendResponse.data.user,
+				friend: response.data.user,
+			});
 		}
 
 		const newUsers = users.filter(
@@ -66,7 +69,17 @@ const Requests = () => {
 		setMe(response.data.user);
 
 		setUsers(newUsers);
+
+		if (
+			onlineUsers.find((user) => user.userId === friendResponse.data.user._id) === undefined
+		) {
+			setContacts((prev) => [...prev, { ...friendResponse.data.user }]);
+		} else {
+			setContacts((prev) => [...prev, { ...friendResponse.data.user, isOnline: true }]);
+		}
 	};
+
+	console.log(onlineUsers);
 
 	return (
 		<div className="find-friends-container">

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { MdKeyboardBackspace } from "react-icons/md";
 
 const FindFriend = () => {
-	const { me, socket, onlineUsers, setMe } = useContext(UserContext);
+	const { me, socket, onlineUsers, setMe, contacts } = useContext(UserContext);
 
 	const [users, setUsers] = useState([]);
 	const [error, setError] = useState("");
@@ -54,7 +54,8 @@ const FindFriend = () => {
 					(user) =>
 						user.requests.find(
 							(request) => request.sender === me._id || request.receiver === me._id
-						) === undefined
+						) === undefined &&
+						contacts.find((contact) => contact._id === user._id) === undefined
 				)
 			);
 		};
@@ -62,7 +63,7 @@ const FindFriend = () => {
 		fetchUsers();
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [me]);
+	}, [me.requests]);
 
 	return (
 		<div className="find-friends-container">
