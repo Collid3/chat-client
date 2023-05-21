@@ -9,6 +9,7 @@ const Requests = () => {
 		useContext(UserContext);
 
 	const [users, setUsers] = useState([]);
+	const [search, setSearch] = useState("");
 	const navigate = useNavigate("");
 
 	const userId = me._id;
@@ -102,16 +103,36 @@ const Requests = () => {
 			</section>
 
 			<ul className="friends-container">
-				{users.map((user) => (
-					<li className="contact" key={user._id}>
-						<h3>{user.username}</h3>
+				<input
+					type="text"
+					placeholder="Search contact"
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
+				/>
 
-						<button onClick={() => replyRequest(true, user._id)}>Accept</button>
-						<button onClick={() => replyRequest(false, user._id)}>Reject</button>
-					</li>
-				))}
+				{users
+					.filter((user) => user.username.includes(search))
+					.map((user) => (
+						<li className="contact" key={user._id}>
+							<h3>{user.username}</h3>
 
-				{users.length === 0 && <h4>No contacts to add</h4>}
+							<button onClick={() => replyRequest(true, user._id)}>Accept</button>
+							<button onClick={() => replyRequest(false, user._id)}>Reject</button>
+						</li>
+					))}
+
+				{users.length === 0 && (
+					<h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
+						No contacts to add
+					</h2>
+				)}
+
+				{users.length > 0 &&
+					users.filter((user) => user.username.includes(search)).length === 0 && (
+						<h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
+							No contact found for the name '{search}'
+						</h2>
+					)}
 			</ul>
 		</div>
 	);

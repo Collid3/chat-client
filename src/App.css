@@ -44,6 +44,10 @@ li {
 	height: 100vh;
 }
 
+a {
+	color: orange;
+}
+
 .loading-page {
 	height: 100vh;
 	display: grid;

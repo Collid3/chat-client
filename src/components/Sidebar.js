@@ -4,10 +4,12 @@ import UserContext from "../context/UserContext";
 import SidebarMenu from "./SidebarMenu";
 import { FiMenu } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
 	const { contacts, me, setSelectedChat, setMe, sidebar, setSidebar } = useContext(UserContext);
 	const [menu, setMenu] = useState(false);
+	const [search, setSearch] = useState("");
 
 	return (
 		<div className={`sidebar sidebar-container ${sidebar && "active"}`}>
@@ -31,19 +33,40 @@ const Sidebar = () => {
 			</section>
 
 			<ul className="sidebar-contacts-container">
-				{contacts.map((user) => (
-					<li
-						className="contact"
-						key={user._id}
-						onClick={() => {
-							setSelectedChat(user);
-							setSidebar(false);
-						}}>
-						<h4>{user.username}</h4>
+				<input
+					type="text"
+					placeholder="Search contact"
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
+				/>
 
-						<p>{user.isOnline ? "Online" : "Offline"}</p>
-					</li>
-				))}
+				{contacts
+					.filter((user) => user.username.includes(search))
+					.map((user) => (
+						<li
+							className="contact"
+							key={user._id}
+							onClick={() => {
+								setSelectedChat(user);
+								setSidebar(false);
+							}}>
+							<h4>{user.username}</h4>
+
+							<p>{user.isOnline ? "Online" : "Offline"}</p>
+						</li>
+					))}
+
+				{contacts.length === 0 && (
+					<h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
+						No friends to chat to. Invite <Link to="/find-friends">Friends</Link>
+					</h2>
+				)}
+
+				{contacts.filter((user) => user.username.includes(search)).length === 0 && (
+					<h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
+						No contact found for the name '{search}'
+					</h2>
+				)}
 			</ul>
 		</div>
 	);

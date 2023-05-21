@@ -11,6 +11,7 @@ const FindFriend = () => {
 		useContext(UserContext);
 
 	const [users, setUsers] = useState([]);
+	const [search, setSearch] = useState("");
 	const navigate = useNavigate("");
 
 	const userId = me._id;
@@ -84,15 +85,30 @@ const FindFriend = () => {
 			</section>
 
 			<ul className="friends-container">
-				{users.map((user) => (
-					<li className="contact" key={user._id}>
-						<h3>{user.username}</h3>
+				<input
+					type="text"
+					placeholder="Search contact"
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
+				/>
+				{users
+					.filter((user) => user.username.includes(search))
+					.map((user) => (
+						<li className="contact" key={user._id}>
+							<h3>{user.username}</h3>
 
-						<button onClick={() => addFriend(user._id)}>ADD</button>
-					</li>
-				))}
+							<button onClick={() => addFriend(user._id)}>ADD</button>
+						</li>
+					))}
 
 				{users.length === 0 && <h4>No contacts to add</h4>}
+
+				{users.length > 0 &&
+					users.filter((user) => user.username.includes(search)).length === 0 && (
+						<h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
+							No user found by the name '{search}'
+						</h2>
+					)}
 			</ul>
 		</div>
 	);
