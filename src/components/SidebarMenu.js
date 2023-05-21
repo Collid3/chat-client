@@ -9,11 +9,10 @@ const SidebarMenu = ({ setMe, me }) => {
 	console.log(me.requests);
 
 	return (
-		<ul className="sidebar-menu-container">
+		<ul className="menu-container sidebar-menu-container">
 			<li>Profile</li>
 			<li onClick={() => navigate("/requests")}>
-				{" "}
-				<span>Requests</span> {requests.length > 0 && <span>{requests.length}</span>}
+				Requests {requests.length > 0 && <span>{requests.length}</span>}
 			</li>
 			<li onClick={() => navigate("/find-friends")}>Find Friends</li>
 			<li onClick={() => Logout(setMe)}>Logout</li>

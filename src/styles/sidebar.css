@@ -1,6 +1,6 @@
 .sidebar-container {
-	flex: 2;
-	background-color: black;
+	flex: 1.8;
+	background-color: darkblue;
 	height: 100vh;
 	max-height: 100vh;
 	display: flex;
@@ -26,12 +26,12 @@
 	cursor: pointer;
 }
 
-.sidebar-menu-container {
+.menu-container {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 	width: max(20%, 220px);
-	background-color: black;
+	background-color: darkblue;
 	outline: 1px solid white;
 	padding: 10px 12px;
 	border-radius: 10px;
@@ -45,43 +45,104 @@
 
 .closed-menu-container {
 	display: flex;
+	align-items: center;
 	gap: 10px;
 	padding-right: 5px;
+	position: relative;
+}
+
+.closed-menu-container p {
+	font-size: 1rem;
+	position: absolute;
+	right: -5px;
+	top: 0;
+	background-color: orange;
+	color: white;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	display: grid;
+	place-content: center;
 }
 
 .closed-menu-container svg {
 	width: 100%;
 }
 
-.sidebar-menu-container li {
+.menu-container li {
 	outline: 1px solid white;
 	padding: 5px;
 	border-radius: 15px;
 	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	position: relative;
 }
 
-.sidebar-menu-container li:hover {
-	background-color: royalblue;
+.menu-container li span {
+	display: grid;
+	place-content: center;
+	background-color: coral;
+	font-size: 1rem;
+	position: absolute;
+	right: 16px;
+	height: 15px;
+	width: 15px;
+	border-radius: 50%;
+	translate: 50% 0;
+}
+
+.menu-container li:hover {
+	background-color: cornflowerblue;
 }
 
 .sidebar-contacts-container {
 	flex-grow: 2;
 	display: flex;
 	flex-direction: column;
-	gap: 15px;
 	list-style: none;
 	background-color: royalblue;
+	padding-top: 1px;
 }
 
 .contact {
-	outline: 2px solid white;
-	padding: 10px 15px;
+	border-bottom: 1px solid white;
+	/* border-left: 1px solid white; */
+	padding: 15px 15px;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
 }
 
+.contact:first-child {
+	border: 1px solid white;
+	border-right: none;
+	border-left: none;
+}
+
 .contact h4 {
 	width: 100%;
 	text-align: left;
+}
+
+.contact:hover {
+	background-color: cornflowerblue;
+}
+
+@media screen and (max-width: 768px) {
+	.sidebar {
+		position: absolute;
+		left: -10000px;
+	}
+
+	.sidebar.active {
+		left: 0;
+		right: 0;
+		bottom: 0;
+		top: 0;
+		height: 100%;
+		width: 100%;
+		overflow: scroll;
+		z-index: 3;
+	}
 }

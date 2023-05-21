@@ -6,23 +6,75 @@
 }
 
 .main-chats-container header {
-	height: 60px;
-	padding: 0 10px;
+	padding: 20.5px 10px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	background-color: black;
+	background-color: darkblue;
+	position: sticky;
+	top: 0;
+	z-index: 2;
+}
+
+.main-chats-container header button {
+	display: none;
+	padding: 0 10px;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
 }
 
 .chats-container {
 	flex-grow: 2;
-	padding: 10px;
-	background-color: royalblue;
+	padding: 15px 10px;
+	background-color: cornflowerblue;
+	overflow: scroll;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.chats-container::-webkit-scrollbar {
+	display: none;
+}
+
+.chats-container .message {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 5px;
+	max-width: 80%;
+	text-align: left;
+}
+
+.chats-container p {
+	font-size: 1rem;
+}
+
+.chats-container section {
+	padding: 5px 10px;
+	padding-right: 15px;
+	outline: 1px solid white;
+	border-radius: 10px 0 10px 10px;
+	background-color: blue;
+}
+
+.chats-container .me {
+	align-self: end;
+	align-items: flex-end;
+	gap: 5px;
+}
+
+.chats-container .me section {
+	background-color: orange;
+	border-radius: 0 10px 10px 10px;
 }
 
 .main-chats-container footer {
-	background-color: black;
+	position: sticky;
+	bottom: 0;
 	display: flex;
+	background-color: royalblue;
 	padding: 15px;
 	gap: 10px;
 }
@@ -52,4 +104,10 @@
 
 .main-chats-container footer .buttons svg {
 	font-size: 3rem;
+}
+
+@media screen and (max-width: 768px) {
+	.main-chats-container header button {
+		display: block;
+	}
 }

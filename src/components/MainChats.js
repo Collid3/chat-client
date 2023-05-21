@@ -1,92 +1,164 @@
 import "../styles/chats.css";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import UserContext from "../context/UserContext";
 import { api } from "../api/apiCall";
-
 import { IoMdAttach } from "react-icons/io";
 
+import loader from "../assets/loader2.gif";
+
 const MainChats = () => {
-	const { selectedChat, me, socket, onlineUsers, messages, setMessages } =
+	const { selectedChat, me, socket, onlineUsers, messages, setMessages, setSidebar, sidebar } =
 		useContext(UserContext);
 
 	const [roomId, setRoomId] = useState("");
 	const textRef = useRef("");
 	const lastMessage = useRef(null);
+	const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		if (!selectedChat) return;
+	useMemo(() => {
+		if (!selectedChat) {
+			return setLoading(false);
+		}
 
 		const fetchMessages = async () => {
-			const roomData = await api.get(`/messageRoom/${me._id}/${selectedChat._id}`);
-			const roomId = roomData.data.room._id;
-			setRoomId(roomId);
+			setLoading(true);
+			try {
+				const roomData = await api.get(`/messageRoom/${me._id}/${selectedChat._id}`);
+				const roomId = roomData.data.room._id;
+				setRoomId(roomId);
 
-			const response = await api.get(`/messages/${roomId}`);
-			setMessages(response.data.messages);
+				const response = await api.get(`/messages/${roomId}`);
+				setMessages(response.data.messages);
+				setLoading(false);
+			} catch (err) {
+				console.log(err.message);
+				setLoading(false);
+			}
 		};
 
 		fetchMessages();
 	}, [selectedChat, setMessages, me._id]);
 
-	const handleSend = async () => {
+	const handleSend = async (e) => {
+		console.log("submitting");
+		e.preventDefault();
 		if (textRef.current.value === "") return;
 
 		const newMessage = {
 			messageRoomId: roomId,
-			senderId: me._id,
+			sender: me._id,
 			text: textRef.current.value,
 		};
-		await api.post("/messages", newMessage);
+		const response = await api.post("/messages", newMessage);
 
 		const friend = onlineUsers.find((user) => user.userId === selectedChat._id);
 		if (friend) {
-			socket.emit("send-message", { to: friend.socketId, newMessage });
+			socket.emit("send-message", { to: friend.socketId, newMessage: response.data.message });
 		}
 
-		setMessages((prev) => [...prev, newMessage]);
+		setMessages((prev) => [...prev, response.data.message]);
 		textRef.current.value = "";
-		// lastMessage.current.scrollIntoView({ behavior: "smooth" });
 	};
 
+	useEffect(() => {
+		if (!lastMessage.current) return;
+		lastMessage.current.scrollIntoView({ behavior: "smooth" });
+	}, [messages]);
+
 	return (
-		<div className="main-chats-container">
-			{!selectedChat && (
+		<form className="main-chats-container" onSubmit={(e) => handleSend(e)}>
+			{!selectedChat && !loading && (
 				<>
-					<h1>No Chat selected</h1>
+					<h1 style={{ height: "100vh", display: "grid", placeContent: "center" }}>
+						Select any contact to start a chat
+					</h1>
 				</>
 			)}
 
-			{selectedChat && (
+			{loading && !sidebar && (
+				<div className="loading-page">
+					<img src={loader} alt="Loading..." />
+				</div>
+			)}
+
+			{selectedChat && !loading && (
 				<>
 					<header>
 						<h3>{selectedChat.username}</h3>
 
-						<div>Options</div>
+						<button
+							onClick={() => {
+								setSidebar(true);
+							}}>
+							back
+						</button>
 					</header>
 
 					<main className="chats-container">
 						{messages.length > 0 ? (
 							messages.map((message) => (
-								<section className="message" key={message._id} ref={lastMessage}>
-									{message.text}
-								</section>
+								<div
+									className={message.sender === me._id ? "message me" : "message"}
+									key={message._id}
+									ref={lastMessage}>
+									<section>{message.text}</section>
+									<p>
+										{new Date(message.createdAt)
+											.getHours()
+											.toLocaleString("en-US", {
+												minimumIntegerDigits: 2,
+												useGrouping: false,
+											})}
+										:
+										{new Date(message.createdAt)
+											.getMinutes()
+											.toLocaleString("en-US", {
+												minimumIntegerDigits: 2,
+												useGrouping: false,
+											})}
+										:
+										{new Date(message.createdAt)
+											.getSeconds()
+											.toLocaleString("en-US", {
+												minimumIntegerDigits: 2,
+												useGrouping: false,
+											})}{" "}
+										{parseInt(
+											new Date(message.createdAt)
+												.getHours()
+												.toLocaleString("en-US", {
+													minimumIntegerDigits: 2,
+													useGrouping: false,
+												})
+										) <= 12
+											? "AM"
+											: "PM"}
+									</p>
+								</div>
 							))
 						) : (
-							<p>Send something to start chat</p>
+							<h2
+								style={{
+									height: "100vh",
+									display: "grid",
+									placeContent: "center",
+								}}>
+								Send any text to start chat
+							</h2>
 						)}
 					</main>
 
 					<footer>
 						<input type="text" placeholder="Type something..." ref={textRef} />
 
-						<div className="buttons">
+						<section className="buttons">
 							<IoMdAttach />
-							<button onClick={handleSend}>Send</button>
-						</div>
+							<button type="submit">Send</button>
+						</section>
 					</footer>
 				</>
 			)}
-		</div>
+		</form>
 	);
 };
 

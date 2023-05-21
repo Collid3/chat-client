@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { protectedApi, api } from "../api/apiCall";
+import { api } from "../api/apiCall";
 import { io } from "socket.io-client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
@@ -13,10 +13,12 @@ export const UserProvider = ({ children }) => {
 	const [onlineUsers, setOnlineUsers] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [messages, setMessages] = useState([]);
+	const [sidebar, setSidebar] = useState(true);
 
 	useEffect(() => {
 		onAuthStateChanged(auth, async (owner) => {
 			if (!owner) {
+				setLoading(false);
 				return setMe(null);
 			}
 
@@ -40,17 +42,21 @@ export const UserProvider = ({ children }) => {
 					setOnlineUsers(users);
 				});
 
-				socket.on("request-accepted", (data) => {
-					setMe(data.me);
-					setContacts((prev) => [...prev, { ...data.friend, isOnline: true }]);
+				socket.on("receive-message", (data) => {
+					setMessages((prev) => [...prev, data.newMessage]);
 				});
 
 				socket.on("receive-request", (data) => {
 					setMe(data);
 				});
 
-				socket.on("receive-message", (data) => {
-					setMessages((prev) => [...prev, data.newMessage]);
+				socket.on("request-accepted", (data) => {
+					setMe(data.me);
+					setContacts((prev) => [...prev, { ...data.friend, isOnline: true }]);
+				});
+
+				socket.on("request-rejected", (data) => {
+					setMe(data.me);
 				});
 
 				setLoading(false);
@@ -75,6 +81,8 @@ export const UserProvider = ({ children }) => {
 				setContacts,
 				messages,
 				setMessages,
+				sidebar,
+				setSidebar,
 			}}>
 			{children}
 		</UserContext.Provider>

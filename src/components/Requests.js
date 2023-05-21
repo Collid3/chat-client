@@ -5,7 +5,8 @@ import { MdKeyboardBackspace } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 const Requests = () => {
-	const { me, socket, onlineUsers, setMe, setContacts } = useContext(UserContext);
+	const { me, socket, onlineUsers, setMe, setContacts, sidebar, setSidebar } =
+		useContext(UserContext);
 
 	const [users, setUsers] = useState([]);
 	const navigate = useNavigate("");
@@ -31,15 +32,7 @@ const Requests = () => {
 	}, [me.requests]);
 
 	const replyRequest = async (accept, friendId) => {
-		if (accept) {
-			// when we accept the request and updating us
-			// sender shoud be our friend and we should be the receiver
-
-			// when we sent the request and it is being accepted
-			// we should be the sender and the friend should be the receiver
-
-			await api.post("/messageRoom", { senderId: friendId, receiverId: me._id });
-		}
+		const friend = onlineUsers.find((user) => user.userId === friendId);
 
 		const friendResponse = await api.put(`/requests/${friendId}`, {
 			sender: friendId,
@@ -51,15 +44,35 @@ const Requests = () => {
 			receiver: me._id,
 		});
 
-		// update if they are online
-		const friend = onlineUsers.find((user) => user.userId === friendId);
-
-		if (friend) {
-			socket.emit("accept-request", {
+		if (!accept) {
+			socket.emit("reject-request", {
 				to: friend.socketId,
 				me: friendResponse.data.user,
 				friend: response.data.user,
 			});
+		}
+
+		if (accept) {
+			await api.post("/messageRoom", { senderId: friendId, receiverId: me._id });
+
+			// add friend to contacts
+			if (
+				onlineUsers.find((user) => user.userId === friendResponse.data.user._id) ===
+				undefined
+			) {
+				setContacts((prev) => [...prev, { ...friendResponse.data.user }]);
+			} else {
+				setContacts((prev) => [...prev, { ...friendResponse.data.user, isOnline: true }]);
+			}
+
+			// update friend if they are online
+			if (friend) {
+				socket.emit("accept-request", {
+					to: friend.socketId,
+					me: friendResponse.data.user,
+					friend: response.data.user,
+				});
+			}
 		}
 
 		const newUsers = users.filter(
@@ -69,28 +82,23 @@ const Requests = () => {
 		setMe(response.data.user);
 
 		setUsers(newUsers);
-
-		if (
-			onlineUsers.find((user) => user.userId === friendResponse.data.user._id) === undefined
-		) {
-			setContacts((prev) => [...prev, { ...friendResponse.data.user }]);
-		} else {
-			setContacts((prev) => [...prev, { ...friendResponse.data.user, isOnline: true }]);
-		}
 	};
 
-	console.log(onlineUsers);
-
 	return (
-		<div className="find-friends-container">
-			<h1>Find Friends</h1>
+		<div className={`sidebar find-friends-container ${sidebar && "active"}`}>
+			<h1>Friend Requests</h1>
 
 			<br />
 
 			<section>
 				<h2>{me.username}</h2>
 
-				<MdKeyboardBackspace onClick={() => navigate("/")} />
+				<MdKeyboardBackspace
+					onClick={() => {
+						setSidebar(true);
+						navigate("/");
+					}}
+				/>
 			</section>
 
 			<ul className="friends-container">
@@ -102,6 +110,8 @@ const Requests = () => {
 						<button onClick={() => replyRequest(false, user._id)}>Reject</button>
 					</li>
 				))}
+
+				{users.length === 0 && <h4>No contacts to add</h4>}
 			</ul>
 		</div>
 	);

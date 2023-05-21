@@ -1,6 +1,5 @@
 import "../styles/auth.css";
-import React, { useContext, useRef, useState } from "react";
-import UserContext from "../context/UserContext";
+import React, { useRef, useState } from "react";
 import { api } from "../api/apiCall";
 import { Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -41,7 +40,7 @@ const Login = () => {
 					break;
 
 				case "Firebase: Password should be at least 6 characters (auth/weak-password).":
-					setError("Password too short. Must be a minimum of 6 characters");
+					setError("Incorrect username or password");
 					break;
 
 				case "Firebase: Error (auth/invalid-email).":
@@ -57,7 +56,7 @@ const Login = () => {
 					break;
 
 				case "Request failed with error: undefined":
-					setError("No internet conection. Check your wifi or mobile data and try again");
+					setError("Make sure you have internet connection and refresh the page");
 					break;
 				case "Request failed with status code 401":
 					setError("Incorrect username or password");

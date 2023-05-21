@@ -6,20 +6,3 @@
 	flex: 3;
 	background-color: cornflowerblue;
 }
-
-@media screen and (max-width: 756px) {
-	.sidebar-container {
-		position: absolute;
-		left: -10000px;
-	}
-
-	.sidebar-container.active {
-		left: 0;
-		right: 0;
-		bottom: 0;
-		top: 0;
-		height: 100%;
-		width: 100%;
-		overflow: scroll;
-	}
-}

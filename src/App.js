@@ -5,6 +5,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+import loader from "./assets/loader2.gif";
 
 function App() {
 	const { me, loading } = useContext(UserContext);
@@ -12,7 +13,9 @@ function App() {
 	return (
 		<>
 			{loading ? (
-				<>Loading...</>
+				<div className="loading-page">
+					<img src={loader} alt="Loading..." />
+				</div>
 			) : (
 				<div className="App">
 					{me ? (
