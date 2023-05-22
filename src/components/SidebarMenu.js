@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Logout from "../utils/Logout";
 
-const SidebarMenu = ({ setMe, me }) => {
+const SidebarMenu = ({ setMe, me, socket }) => {
 	const navigate = useNavigate();
 	const requests = me.requests.filter((request) => request.sender !== me._id);
 
@@ -15,7 +15,7 @@ const SidebarMenu = ({ setMe, me }) => {
 				Requests {requests.length > 0 && <span>{requests.length}</span>}
 			</li>
 			<li onClick={() => navigate("/find-friends")}>Find Friends</li>
-			<li onClick={() => Logout(setMe)}>Logout</li>
+			<li onClick={() => Logout(setMe, socket)}>Logout</li>
 		</ul>
 	);
 };

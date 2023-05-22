@@ -7,7 +7,7 @@ import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
-	const { contacts, me, setSelectedChat, setMe, sidebar, setSidebar, onlineUsers } =
+	const { contacts, me, setSelectedChat, setMe, sidebar, setSidebar, onlineUsers, socket } =
 		useContext(UserContext);
 	const [menu, setMenu] = useState(false);
 	const [search, setSearch] = useState("");
@@ -30,7 +30,7 @@ const Sidebar = () => {
 					<RxCross2 onClick={() => setMenu(false)} />
 				)}
 
-				{menu && <SidebarMenu setMe={setMe} me={me} />}
+				{menu && <SidebarMenu setMe={setMe} me={me} socket={socket} />}
 			</section>
 
 			<ul className="sidebar-contacts-container">
