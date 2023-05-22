@@ -3,7 +3,7 @@
 	display: flex;
 	flex-direction: column;
 	padding: 10px;
-	background-color: royalblue;
+	background-color: rgb(51, 51, 51);
 	height: 100vh;
 	max-height: 100vh;
 }
@@ -53,4 +53,9 @@
 	margin-right: 5px;
 	cursor: pointer;
 	font-size: 1rem;
+}
+
+.friends-container li button:hover {
+	background-color: orange;
+	color: white;
 }

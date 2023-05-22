@@ -2,15 +2,16 @@ import React, { useContext, useRef, useState } from "react";
 import UserContext from "../context/UserContext";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { updateProfile } from "firebase/auth";
-import { auth, db } from "../config/firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
+import { auth } from "../config/firebaseConfig";
 import { Link } from "react-router-dom";
 import { api } from "../api/apiCall";
+import { BsEyeFill } from "react-icons/bs";
 
 const Register = () => {
 	const { setMe } = useContext(UserContext);
 
 	const [error, setError] = useState("");
+	const [showPassword, setShowPassword] = useState(false);
 	const inputs = {
 		email: useRef(""),
 		username: useRef(""),
@@ -107,7 +108,15 @@ const Register = () => {
 					spellCheck={false}
 				/>
 				<input type="text" placeholder="Username" ref={inputs.username} />
-				<input type="password" placeholder="Password" ref={inputs.password} />
+
+				<section>
+					<BsEyeFill onClick={() => setShowPassword(!showPassword)} />
+					<input
+						type={`${showPassword ? "text" : "password"}`}
+						placeholder="Password"
+						ref={inputs.password}
+					/>
+				</section>
 
 				<button type="submit">Register</button>
 

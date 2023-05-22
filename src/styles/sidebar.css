@@ -1,6 +1,6 @@
 .sidebar {
 	flex: 1.8;
-	background-color: darkblue;
+	background-color: black;
 	height: 100vh;
 	max-height: 100vh;
 	display: flex;
@@ -35,7 +35,7 @@
 	flex-direction: column;
 	gap: 10px;
 	width: max(20%, 220px);
-	background-color: darkblue;
+	background-color: black;
 	outline: 1px solid white;
 	padding: 10px 12px;
 	border-radius: 10px;
@@ -105,7 +105,7 @@
 	display: flex;
 	flex-direction: column;
 	list-style: none;
-	background-color: royalblue;
+	background-color: rgb(51, 51, 51);
 	padding-top: 1px;
 }
 
@@ -119,7 +119,7 @@
 .contact {
 	border-bottom: 1px solid white;
 	/* border-left: 1px solid white; */
-	padding: 15px 15px;
+	padding: 10px 15px;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -145,6 +145,16 @@
 
 .contact:hover {
 	background-color: cornflowerblue;
+}
+
+.sidebar-loading-page {
+	flex-grow: 2;
+	display: grid;
+	place-content: center;
+}
+
+.sidebar-loading-page img {
+	width: 60px;
 }
 
 @media screen and (max-width: 768px) {

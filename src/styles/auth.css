@@ -28,6 +28,29 @@
 	outline: 1.5px solid darkblue;
 }
 
+.auth-form input {
+	width: 100%;
+}
+
+.auth-form section {
+	position: relative;
+}
+
+.auth-form section svg {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	translate: 0 -50%;
+	z-index: 6;
+	font-size: 2.5rem;
+	color: black;
+	cursor: pointer;
+}
+
+.auth-form section svg:hover {
+	color: orange;
+}
+
 .auth-form p {
 	text-align: center;
 }

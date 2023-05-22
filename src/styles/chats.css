@@ -10,7 +10,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	background-color: darkblue;
+	background-color: black;
 	position: sticky;
 	top: 0;
 	z-index: 2;
@@ -27,7 +27,7 @@
 .chats-container {
 	flex-grow: 2;
 	padding: 15px 10px;
-	background-color: cornflowerblue;
+	background-color: rgb(51, 51, 51);
 	overflow: scroll;
 	display: flex;
 	flex-direction: column;
@@ -54,9 +54,9 @@
 .chats-container section {
 	padding: 5px 10px;
 	padding-right: 15px;
-	outline: 1px solid white;
+	color: black;
 	border-radius: 10px 0 10px 10px;
-	background-color: blue;
+	background-color: white;
 }
 
 .chats-container .me {
@@ -66,7 +66,8 @@
 }
 
 .chats-container .me section {
-	background-color: orange;
+	background-color: royalblue;
+	color: white;
 	border-radius: 0 10px 10px 10px;
 }
 
@@ -74,7 +75,7 @@
 	position: sticky;
 	bottom: 0;
 	display: flex;
-	background-color: royalblue;
+	background-color: rgb(27, 27, 27);
 	padding: 15px;
 	gap: 10px;
 }

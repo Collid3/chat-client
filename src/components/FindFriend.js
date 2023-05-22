@@ -3,15 +3,16 @@ import React, { useContext, useEffect, useState } from "react";
 import UserContext from "../context/UserContext";
 import { api } from "../api/apiCall";
 import { useNavigate } from "react-router-dom";
-
 import { MdKeyboardBackspace } from "react-icons/md";
+import loader from "../assets/loader.gif";
 
 const FindFriend = () => {
-	const { me, socket, onlineUsers, setMe, contacts, sidebar, setSidebar, loading } =
+	const { me, socket, onlineUsers, setMe, contacts, sidebar, setSidebar } =
 		useContext(UserContext);
 
 	const [users, setUsers] = useState([]);
 	const [search, setSearch] = useState("");
+	const [loading, setLoading] = useState(true);
 	const navigate = useNavigate("");
 
 	const userId = me._id;
@@ -45,7 +46,8 @@ const FindFriend = () => {
 	};
 
 	useEffect(() => {
-		if (!me || loading) return;
+		if (!me) return setLoading(false);
+
 		const fetchUsers = async () => {
 			const response = await api.get(`/users/${userId}`);
 			const contactsResponse = await api.get(`/users/contacts/${me._id}`);
@@ -60,6 +62,8 @@ const FindFriend = () => {
 						myContacts.find((contact) => contact._id === user._id) === undefined
 				)
 			);
+
+			setLoading(false);
 		};
 
 		fetchUsers();
@@ -67,49 +71,66 @@ const FindFriend = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [me.requests, contacts]);
 
+	console.log(loading);
+
 	return (
 		<div className={`sidebar find-friends-container  ${sidebar && "active"}`}>
-			<h1>Find Friends</h1>
+			{!loading && (
+				<>
+					<h1>Find Friends</h1>
 
-			<br />
+					<br />
 
-			<section>
-				<h2>{me.username}</h2>
+					<section>
+						<h2>{me.username}</h2>
 
-				<MdKeyboardBackspace
-					onClick={() => {
-						setSidebar(true);
-						navigate("/");
-					}}
-				/>
-			</section>
+						<MdKeyboardBackspace
+							onClick={() => {
+								setSidebar(true);
+								navigate("/");
+							}}
+						/>
+					</section>
 
-			<ul className="friends-container">
-				<input
-					type="text"
-					placeholder="Search contact"
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-				/>
-				{users
-					.filter((user) => user.username.includes(search))
-					.map((user) => (
-						<li className="contact" key={user._id}>
-							<h3>{user.username}</h3>
+					<ul className="friends-container">
+						<input
+							type="text"
+							placeholder="Search contact"
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
+						/>
+						{users
+							.filter((user) => user.username.includes(search))
+							.map((user) => (
+								<li className="contact" key={user._id}>
+									<h3>{user.username}</h3>
 
-							<button onClick={() => addFriend(user._id)}>ADD</button>
-						</li>
-					))}
+									<button onClick={() => addFriend(user._id)}>ADD</button>
+								</li>
+							))}
 
-				{users.length === 0 && <h4>No contacts to add</h4>}
+						{users.length === 0 && <h4>No contacts to add</h4>}
 
-				{users.length > 0 &&
-					users.filter((user) => user.username.includes(search)).length === 0 && (
-						<h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
-							No user found by the name '{search}'
-						</h2>
-					)}
-			</ul>
+						{users.length > 0 &&
+							users.filter((user) => user.username.includes(search)).length === 0 && (
+								<h2
+									style={{
+										flexGrow: 2,
+										display: "grid",
+										placeContent: "center",
+									}}>
+									No user found by the name '{search}'
+								</h2>
+							)}
+					</ul>
+				</>
+			)}
+
+			{loading && (
+				<div className="sidebar-loading-page">
+					<img src={loader} alt="Loading..." />
+				</div>
+			)}
 		</div>
 	);
 };

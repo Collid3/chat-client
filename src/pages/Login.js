@@ -2,12 +2,14 @@ import "../styles/auth.css";
 import React, { useRef, useState } from "react";
 import { api } from "../api/apiCall";
 import { Link } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
+import { BsEyeFill } from "react-icons/bs";
 
 const Login = () => {
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 	const inputs = {
 		username: useRef(""),
 		password: useRef(""),
@@ -98,7 +100,15 @@ const Login = () => {
 				)}
 
 				<input type="text" placeholder="Username" ref={inputs.username} />
-				<input type="password" placeholder="Password" ref={inputs.password} />
+
+				<section>
+					<input
+						type={`${showPassword ? "text" : "password"}`}
+						placeholder="Password"
+						ref={inputs.password}
+					/>
+					<BsEyeFill onClick={() => setShowPassword(!showPassword)} />
+				</section>
 
 				<button type="submit" onClick={handleLogin}>
 					Login
