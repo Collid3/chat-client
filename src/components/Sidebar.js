@@ -7,7 +7,8 @@ import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
-	const { contacts, me, setSelectedChat, setMe, sidebar, setSidebar } = useContext(UserContext);
+	const { contacts, me, setSelectedChat, setMe, sidebar, setSidebar, onlineUsers } =
+		useContext(UserContext);
 	const [menu, setMenu] = useState(false);
 	const [search, setSearch] = useState("");
 
@@ -41,6 +42,10 @@ const Sidebar = () => {
 				/>
 
 				{contacts
+					.sort(
+						(a, b) =>
+							new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt)
+					)
 					.filter((user) => user.username.includes(search))
 					.map((user) => (
 						<li
@@ -57,7 +62,13 @@ const Sidebar = () => {
 							</div>
 
 							<div>
-								<h4>{user.isOnline ? "Online" : "Offline"}</h4>
+								<h4>
+									{onlineUsers.find(
+										(onlineUser) => onlineUser.userId === user._id
+									)
+										? "Online"
+										: "Offline"}
+								</h4>
 
 								<p>
 									{new Date(user.lastMessage?.createdAt)

@@ -8,6 +8,10 @@
 	border-right: 2px solid white;
 }
 
+.sidebar::-webkit-scrollbar {
+	display: none;
+}
+
 .sidebar-container > section {
 	display: flex;
 	align-items: center;
@@ -158,5 +162,6 @@
 		width: 100%;
 		overflow: scroll;
 		z-index: 3;
+		border: none;
 	}
 }

@@ -49,19 +49,6 @@ export const UserProvider = ({ children }) => {
 				socket.emit("addUser", userData.data.user._id);
 
 				socket.on("getUsers", (users) => {
-					const newContacts = response.data.users.map((user) =>
-						users.find((user1) => user._id === user1.userId) !== undefined
-							? { ...user, isOnline: true }
-							: user
-					);
-
-					setContacts((prev) => {
-						return prev.map((contact) =>
-							users.find((user) => user._id === contact._id)
-								? { ...contact, isOnline: true }
-								: contact
-						);
-					});
 					setOnlineUsers(users);
 				});
 
