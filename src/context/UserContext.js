@@ -29,6 +29,23 @@ export const UserProvider = ({ children }) => {
 				setMe({ ...userData.data.user, isOnline: true });
 				const response = await api.get(`/users/contacts/${userData.data.user._id}`);
 
+				let lastMessages = [];
+
+				response.data.users.map(async (user) => {
+					const roomData = await api.get(
+						`/messageRoom/${userData.data.user._id}/${user._id}`
+					);
+					const roomId = roomData.data.room._id;
+
+					const response = await api.get(`/messages/last-message/${roomId}`);
+					lastMessages = [
+						...lastMessages,
+						{ ...user, lastMessage: { ...response.data.message } },
+					];
+
+					return setContacts(lastMessages);
+				});
+
 				socket.emit("addUser", userData.data.user._id);
 
 				socket.on("getUsers", (users) => {
@@ -38,12 +55,26 @@ export const UserProvider = ({ children }) => {
 							: user
 					);
 
-					setContacts(newContacts);
+					setContacts((prev) => {
+						return prev.map((contact) =>
+							users.find((user) => user._id === contact._id)
+								? { ...contact, isOnline: true }
+								: contact
+						);
+					});
 					setOnlineUsers(users);
 				});
 
 				socket.on("receive-message", (data) => {
+					console.log(data);
 					setMessages((prev) => [...prev, data.newMessage]);
+					setContacts((prev) => {
+						return prev.map((contact) =>
+							contact.lastMessage.messageRoomId === data.newMessage.messageRoomId
+								? { ...contact, lastMessage: { ...data.newMessage } }
+								: contact
+						);
+					});
 				});
 
 				socket.on("receive-request", (data) => {

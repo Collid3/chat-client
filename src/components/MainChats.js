@@ -7,8 +7,17 @@ import { IoMdAttach } from "react-icons/io";
 import loader from "../assets/loader2.gif";
 
 const MainChats = () => {
-	const { selectedChat, me, socket, onlineUsers, messages, setMessages, setSidebar, sidebar } =
-		useContext(UserContext);
+	const {
+		selectedChat,
+		me,
+		socket,
+		onlineUsers,
+		messages,
+		setMessages,
+		setSidebar,
+		sidebar,
+		setContacts,
+	} = useContext(UserContext);
 
 	const [roomId, setRoomId] = useState("");
 	const textRef = useRef("");
@@ -40,7 +49,6 @@ const MainChats = () => {
 	}, [selectedChat, setMessages, me._id]);
 
 	const handleSend = async (e) => {
-		console.log("submitting");
 		e.preventDefault();
 		if (textRef.current.value === "") return;
 
@@ -57,6 +65,13 @@ const MainChats = () => {
 		}
 
 		setMessages((prev) => [...prev, response.data.message]);
+		setContacts((prev) => {
+			return prev.map((contact) =>
+				contact._id === selectedChat._id
+					? { ...contact, lastMessage: response.data.message }
+					: contact
+			);
+		});
 		textRef.current.value = "";
 	};
 
@@ -87,6 +102,7 @@ const MainChats = () => {
 						<h3>{selectedChat.username}</h3>
 
 						<button
+							type="button"
 							onClick={() => {
 								setSidebar(true);
 							}}>

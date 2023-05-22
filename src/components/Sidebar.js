@@ -50,9 +50,35 @@ const Sidebar = () => {
 								setSelectedChat(user);
 								setSidebar(false);
 							}}>
-							<h4>{user.username}</h4>
+							<div>
+								<h4>{user.username}</h4>
 
-							<p>{user.isOnline ? "Online" : "Offline"}</p>
+								<p>{user.lastMessage?.text}</p>
+							</div>
+
+							<div>
+								<h4>{user.isOnline ? "Online" : "Offline"}</h4>
+
+								<p>
+									{new Date(user.lastMessage?.createdAt)
+										.getHours()
+										.toLocaleString("en-US", {
+											minimumIntegerDigits: 2,
+											useGrouping: false,
+										})}
+									:
+									{new Date(user.lastMessage?.createdAt)
+										.getMinutes()
+										.toLocaleString("en-US", {
+											minimumIntegerDigits: 2,
+											useGrouping: false,
+										})}{" "}
+									{parseInt(new Date(user.lastMessage?.createdAt).getHours()) >=
+									12
+										? "PM"
+										: "AM"}
+								</p>
+							</div>
 						</li>
 					))}
 
