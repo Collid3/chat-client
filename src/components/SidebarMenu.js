@@ -6,8 +6,6 @@ const SidebarMenu = ({ setMe, me, socket }) => {
 	const navigate = useNavigate();
 	const requests = me.requests.filter((request) => request.sender !== me._id);
 
-	console.log(me.requests);
-
 	return (
 		<ul className="menu-container sidebar-menu-container">
 			<li>Profile</li>

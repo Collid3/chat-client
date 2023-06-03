@@ -71,27 +71,25 @@ const FindFriend = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [me.requests, contacts]);
 
-	console.log(loading);
-
 	return (
 		<div className={`sidebar find-friends-container  ${sidebar && "active"}`}>
+			<h1>Find Friends</h1>
+
+			<br />
+
+			<section>
+				<h2>{me.username}</h2>
+
+				<MdKeyboardBackspace
+					onClick={() => {
+						setSidebar(true);
+						navigate("/");
+					}}
+				/>
+			</section>
+
 			{!loading && (
 				<>
-					<h1>Find Friends</h1>
-
-					<br />
-
-					<section>
-						<h2>{me.username}</h2>
-
-						<MdKeyboardBackspace
-							onClick={() => {
-								setSidebar(true);
-								navigate("/");
-							}}
-						/>
-					</section>
-
 					<ul className="friends-container">
 						<input
 							type="text"
@@ -99,6 +97,7 @@ const FindFriend = () => {
 							value={search}
 							onChange={(e) => setSearch(e.target.value)}
 						/>
+
 						{users
 							.filter((user) => user.username.includes(search))
 							.map((user) => (

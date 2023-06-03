@@ -3,6 +3,7 @@ import { api } from "../api/apiCall";
 import UserContext from "../context/UserContext";
 import { MdKeyboardBackspace } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import loader from "../assets/loader.gif";
 
 const Requests = () => {
 	const { me, socket, onlineUsers, setMe, setContacts, sidebar, setSidebar } =
@@ -10,12 +11,13 @@ const Requests = () => {
 
 	const [users, setUsers] = useState([]);
 	const [search, setSearch] = useState("");
+	const [loading, setLoading] = useState(true);
 	const navigate = useNavigate("");
 
 	const userId = me._id;
 
 	useEffect(() => {
-		if (!me) return;
+		if (!me) return setLoading(false);
 		const fetchUsers = async () => {
 			const response = await api.get(`/users/${userId}`);
 
@@ -25,6 +27,8 @@ const Requests = () => {
 						user.requests.find((request) => request.receiver === userId) !== undefined
 				)
 			);
+
+			setLoading(false);
 		};
 
 		fetchUsers();
@@ -102,38 +106,57 @@ const Requests = () => {
 				/>
 			</section>
 
-			<ul className="friends-container">
-				<input
-					type="text"
-					placeholder="Search contact"
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-				/>
+			{!loading && (
+				<>
+					<ul className="friends-container">
+						<input
+							type="text"
+							placeholder="Search contact"
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
+						/>
 
-				{users
-					.filter((user) => user.username.includes(search))
-					.map((user) => (
-						<li className="contact" key={user._id}>
-							<h3>{user.username}</h3>
+						{users
+							.filter((user) => user.username.includes(search))
+							.map((user) => (
+								<li className="contact" key={user._id}>
+									<h3>{user.username}</h3>
 
-							<button onClick={() => replyRequest(true, user._id)}>Accept</button>
-							<button onClick={() => replyRequest(false, user._id)}>Reject</button>
-						</li>
-					))}
+									<button onClick={() => replyRequest(true, user._id)}>
+										Accept
+									</button>
+									<button onClick={() => replyRequest(false, user._id)}>
+										Reject
+									</button>
+								</li>
+							))}
 
-				{users.length === 0 && (
-					<h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
-						No contacts to add
-					</h2>
-				)}
+						{users.length === 0 && (
+							<h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
+								No contacts to add
+							</h2>
+						)}
 
-				{users.length > 0 &&
-					users.filter((user) => user.username.includes(search)).length === 0 && (
-						<h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
-							No contact found for the name '{search}'
-						</h2>
-					)}
-			</ul>
+						{users.length > 0 &&
+							users.filter((user) => user.username.includes(search)).length === 0 && (
+								<h2
+									style={{
+										flexGrow: 2,
+										display: "grid",
+										placeContent: "center",
+									}}>
+									No contact found for the name '{search}'
+								</h2>
+							)}
+					</ul>
+				</>
+			)}
+
+			{loading && (
+				<div className="sidebar-loading-page">
+					<img src={loader} alt="Loading..." />
+				</div>
+			)}
 		</div>
 	);
 };

@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 const UserContext = createContext({});
-const socket = io.connect("http://localhost:5000");
+let socket = null;
 
 export const UserProvider = ({ children }) => {
 	const [me, setMe] = useState(null);
@@ -21,6 +21,8 @@ export const UserProvider = ({ children }) => {
 				setLoading(false);
 				return setMe(null);
 			}
+
+			socket = io.connect("http://localhost:5000");
 
 			setLoading(true);
 			try {

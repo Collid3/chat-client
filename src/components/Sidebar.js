@@ -7,8 +7,17 @@ import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
-	const { contacts, me, setSelectedChat, setMe, sidebar, setSidebar, onlineUsers, socket } =
-		useContext(UserContext);
+	const {
+		contacts,
+		me,
+		setSelectedChat,
+		setMe,
+		sidebar,
+		setSidebar,
+		onlineUsers,
+		socket,
+		setOnlineUsers,
+	} = useContext(UserContext);
 	const [menu, setMenu] = useState(false);
 	const [search, setSearch] = useState("");
 
