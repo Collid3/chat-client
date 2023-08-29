@@ -1,10 +1,10 @@
 import axios from "axios";
 
 export const protectedApi = axios.create({
-	baseURL: "http://localhost:4000",
-	withCredentials: true,
+  baseURL: "https://seroba-chat-api.onrender.com",
+  withCredentials: true,
 });
 
 export const api = axios.create({
-	baseURL: "http://localhost:4000",
+  baseURL: "https://seroba-chat-api.onrender.com",
 });
