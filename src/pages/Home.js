@@ -7,17 +7,18 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Requests from "../components/Requests";
 
 const Home = () => {
-	return (
-		<main className="home-container">
-			<Routes>
-				<Route path="/*" element={<Navigate to="/" replace />} />
-				<Route path="/" element={<Sidebar />} />
-				<Route path="/find-friends" element={<FindFriend />} />
-				<Route path="/requests" element={<Requests />} />
-			</Routes>
-			<MainChats />
-		</main>
-	);
+  return (
+    <main className="home-container">
+      <Routes>
+        <Route path="/*" element={<Navigate to="/" replace />} />
+        <Route path="/" element={<Sidebar />} />
+        <Route path="/find-friends" element={<FindFriend />} />
+        <Route path="/requests" element={<Requests />} />
+      </Routes>
+
+      <MainChats />
+    </main>
+  );
 };
 
 export default Home;

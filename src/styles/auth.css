@@ -1,56 +1,61 @@
 .auth-container {
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .auth-container h1 {
-	margin-bottom: 20px;
-	text-transform: uppercase;
+  margin-bottom: 20px;
+  text-transform: uppercase;
 }
 
 .auth-form {
-	/* flex: 2; */
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
-	width: max(500px, 30%);
-	margin: 0 auto;
+  /* flex: 2; */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: max(500px, 30%);
+  margin: 0 auto;
+}
+
+.login-demo-guide {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
 }
 
 .auth-form input,
 .auth-form button {
-	padding: 10px;
+  padding: 10px;
 }
 
 .auth-form input:focus {
-	outline: 1.5px solid darkblue;
+  outline: 1.5px solid darkblue;
 }
 
 .auth-form input {
-	width: 100%;
+  width: 100%;
 }
 
 .auth-form section {
-	position: relative;
+  position: relative;
 }
 
 .auth-form section svg {
-	position: absolute;
-	right: 10px;
-	top: 50%;
-	translate: 0 -50%;
-	z-index: 6;
-	font-size: 2.5rem;
-	color: black;
-	cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  translate: 0 -50%;
+  z-index: 6;
+  font-size: 2.5rem;
+  color: black;
+  cursor: pointer;
 }
 
 .auth-form section svg:hover {
-	color: orange;
+  color: orange;
 }
 
 .auth-form p {
-	text-align: center;
+  text-align: center;
 }

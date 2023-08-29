@@ -7,115 +7,133 @@ import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
-	const {
-		contacts,
-		me,
-		setSelectedChat,
-		setMe,
-		sidebar,
-		setSidebar,
-		onlineUsers,
-		socket,
-		setOnlineUsers,
-	} = useContext(UserContext);
-	const [menu, setMenu] = useState(false);
-	const [search, setSearch] = useState("");
+  const {
+    contacts,
+    me,
+    setSelectedChat,
+    setMe,
+    sidebar,
+    setSidebar,
+    onlineUsers,
+    socket,
+    setOnlineUsers,
+  } = useContext(UserContext);
+  const [menu, setMenu] = useState(false);
+  const [search, setSearch] = useState("");
 
-	return (
-		<div className={`sidebar sidebar-container ${sidebar && "active"}`}>
-			<section>
-				<h2>{me.username}</h2>
+  const readMessages = (user) => {
+    if (!user) return;
+  };
 
-				{!menu ? (
-					<div className="closed-menu-container">
-						<FiMenu onClick={() => setMenu(true)} />
-						{me.requests.filter((request) => request.sender !== me._id).length > 0 && (
-							<p>
-								{me.requests.filter((request) => request.sender !== me._id).length}
-							</p>
-						)}
-					</div>
-				) : (
-					<RxCross2 onClick={() => setMenu(false)} />
-				)}
+  console.log(contacts);
 
-				{menu && <SidebarMenu setMe={setMe} me={me} socket={socket} />}
-			</section>
+  return (
+    <aside className={`sidebar sidebar-container ${sidebar && "active"}`}>
+      <section>
+        <h2>{me.username}</h2>
 
-			<ul className="sidebar-contacts-container">
-				<input
-					type="text"
-					placeholder="Search contact"
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-				/>
+        {!menu ? (
+          <div className="closed-menu-container">
+            <FiMenu onClick={() => setMenu(true)} />
+            {me.requests.filter((request) => request.sender !== me._id).length >
+              0 && (
+              <p>
+                {
+                  me.requests.filter((request) => request.sender !== me._id)
+                    .length
+                }
+              </p>
+            )}
+          </div>
+        ) : (
+          <RxCross2 onClick={() => setMenu(false)} />
+        )}
 
-				{contacts
-					.sort(
-						(a, b) =>
-							new Date(b.lastMessage.createdAt) - new Date(a.lastMessage.createdAt)
-					)
-					.filter((user) => user.username.includes(search))
-					.map((user) => (
-						<li
-							className="contact"
-							key={user._id}
-							onClick={() => {
-								setSelectedChat(user);
-								setSidebar(false);
-							}}>
-							<div>
-								<h4>{user.username}</h4>
+        {menu && <SidebarMenu setMe={setMe} me={me} socket={socket} />}
+      </section>
 
-								<p>{user.lastMessage?.text}</p>
-							</div>
+      <ul className="sidebar-contacts-container">
+        <input
+          type="text"
+          placeholder="Search contact"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
-							<div>
-								<h4>
-									{onlineUsers.find(
-										(onlineUser) => onlineUser.userId === user._id
-									)
-										? "Online"
-										: "Offline"}
-								</h4>
+        {contacts
+          .sort(
+            (a, b) =>
+              new Date(b.lastMessage.createdAt) -
+              new Date(a.lastMessage.createdAt)
+          )
+          .filter((user) => user.username.includes(search))
+          .map((user) => (
+            <li
+              className="contact"
+              key={user._id}
+              onClick={() => {
+                readMessages(user);
+                setSelectedChat(user);
+                setSidebar(false);
+              }}
+            >
+              <div>
+                <h4>{user.username}</h4>
 
-								<p>
-									{new Date(user.lastMessage?.createdAt)
-										.getHours()
-										.toLocaleString("en-US", {
-											minimumIntegerDigits: 2,
-											useGrouping: false,
-										})}
-									:
-									{new Date(user.lastMessage?.createdAt)
-										.getMinutes()
-										.toLocaleString("en-US", {
-											minimumIntegerDigits: 2,
-											useGrouping: false,
-										})}{" "}
-									{parseInt(new Date(user.lastMessage?.createdAt).getHours()) >=
-									12
-										? "PM"
-										: "AM"}
-								</p>
-							</div>
-						</li>
-					))}
+                <p>{user.lastMessage?.text}</p>
+              </div>
 
-				{contacts.length === 0 && (
-					<h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
-						No friends to chat to. Invite <Link to="/find-friends">Friends</Link>
-					</h2>
-				)}
+              <div>
+                <h4>
+                  {onlineUsers.find(
+                    (onlineUser) => onlineUser.userId === user._id
+                  )
+                    ? "Online"
+                    : "Offline"}
+                </h4>
 
-				{contacts.filter((user) => user.username.includes(search)).length === 0 && (
-					<h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
-						No contact found for the name '{search}'
-					</h2>
-				)}
-			</ul>
-		</div>
-	);
+                {JSON.stringify(user.lastMessage) !== "{}" && (
+                  <p>
+                    {new Date(user.lastMessage?.createdAt)
+                      .getHours()
+                      .toLocaleString("en-US", {
+                        minimumIntegerDigits: 2,
+                        useGrouping: false,
+                      })}
+                    :
+                    {new Date(user.lastMessage?.createdAt)
+                      .getMinutes()
+                      .toLocaleString("en-US", {
+                        minimumIntegerDigits: 2,
+                        useGrouping: false,
+                      })}{" "}
+                    {parseInt(
+                      new Date(user.lastMessage?.createdAt).getHours()
+                    ) >= 12
+                      ? "PM"
+                      : "AM"}
+                  </p>
+                )}
+              </div>
+            </li>
+          ))}
+
+        {contacts.length === 0 && (
+          <h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
+            No friends to chat to. Invite{" "}
+            <Link to="/find-friends">Friends</Link>
+          </h2>
+        )}
+
+        {contacts.filter((user) => user.username.includes(search)).length ===
+          0 && (
+          <h2 style={{ flexGrow: 2, display: "grid", placeContent: "center" }}>
+            No contact found for the name '{search}'
+          </h2>
+        )}
+      </ul>
+    </aside>
+  );
 };
 
 export default Sidebar;
