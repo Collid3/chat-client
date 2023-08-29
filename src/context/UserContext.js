@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
         return setMe(null);
       }
 
-      socket = io.connect("http://localhost:5000");
+      socket = io.connect("https://seroba-chat-socket.onrender.com");
 
       setLoading(true);
       try {
