@@ -50,7 +50,6 @@ export const UserProvider = ({ children }) => {
 
           return setContacts(lastMessages);
         });
-        console.log(response.data);
 
         socket.emit("addUser", userData.data.user._id);
 
@@ -60,13 +59,6 @@ export const UserProvider = ({ children }) => {
 
         socket.on("receive-message", (data) => {
           setMessages((prev) => [...prev, data.newMessage]);
-
-          console.log(data);
-          // if (contacts.length === 0) {
-          //   setContacts([data])
-          // }
-          // setContacts()
-          console.log(contacts);
 
           setContacts((prev) => {
             return prev.map((contact) =>

@@ -31,7 +31,6 @@ const FindFriend = () => {
 
 			const friend = onlineUsers.find((user) => user.userId === friendId);
 			if (friend) {
-				console.log("sending request");
 				socket.emit("send-request", {
 					to: friend.socketId,
 					updatedUser: response.data.user,

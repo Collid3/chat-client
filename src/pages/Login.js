@@ -118,8 +118,11 @@ const Login = () => {
         )}
 
         <p className="login-demo-guide">
-          For Demo review use <b>Tester1</b> and <b>Tester2</b> as usernames and
-          password for both is <b>123456</b>
+          Demo Account 1: Username: <b>Tester1</b>, password: <b>123456</b>
+        </p>
+
+        <p className="login-demo-guide">
+          Demo Account 2: Username: <b>Tester2</b>, password: <b>123456</b>
         </p>
 
         <input type="text" placeholder="Username" ref={inputs.username} />

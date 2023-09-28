@@ -16,7 +16,6 @@ const Sidebar = () => {
     setSidebar,
     onlineUsers,
     socket,
-    setOnlineUsers,
   } = useContext(UserContext);
   const [menu, setMenu] = useState(false);
   const [search, setSearch] = useState("");
@@ -24,8 +23,6 @@ const Sidebar = () => {
   const readMessages = (user) => {
     if (!user) return;
   };
-
-  console.log(contacts);
 
   return (
     <aside className={`sidebar sidebar-container ${sidebar && "active"}`}>
