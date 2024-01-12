@@ -182,7 +182,7 @@ const MainChats = () => {
             <input type="text" placeholder="Type something..." ref={textRef} />
 
             <section className="buttons">
-              <IoMdAttach />
+              {/* <IoMdAttach /> */}
               <button type="submit">Send</button>
             </section>
           </footer>

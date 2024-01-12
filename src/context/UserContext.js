@@ -89,11 +89,11 @@ export const UserProvider = ({ children }) => {
         });
 
         setNetworkError(false);
-        setLoading(false);
+        return setLoading(false);
       } catch (err) {
         console.log(err.message);
         setNetworkError(true);
-        setLoading(false);
+        return setLoading(false);
       }
     });
   }, []);
