@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/Auth/SignUpPage";
 import LoginPage from "./pages/Auth/LoginPage";
-import SettingsPage from "./pages/Settingspage";
+import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import AuthContext from "./context/AuthContext";
 
