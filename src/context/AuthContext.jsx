@@ -4,7 +4,10 @@ import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
 const AuthContext = createContext();
-const SOCKET_URL = "http://localhost:5000";
+const SOCKET_URL =
+  import.meta.env.VITE_ENV === "development"
+    ? "http://localhost:5000"
+    : "https://chat-server-e9hl.onrender.com";
 let userId = false;
 
 export const AuthProvider = ({ children }) => {
