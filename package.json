@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "eslintConfig": {
+    "env": {
+        "browser": true,
+        "node": true
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

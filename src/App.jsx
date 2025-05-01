@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Meta } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/Auth/SignUpPage";
 import LoginPage from "./pages/Auth/LoginPage";
-import SettingsPage from "./pages/Settingspage";
+import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import AuthContext from "./context/AuthContext";
 
