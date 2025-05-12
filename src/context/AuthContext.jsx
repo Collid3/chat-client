@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [loggingIn, setLoggingIn] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [socket, setSocket] = useState(null);
 
@@ -92,6 +93,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const deleteAccount = async () => {
+    setIsDeletingAccount(true);
+    try {
+      await api.delete("/auth/delete-account");
+      await api.get("/auth/logout");
+      setMe(null);
+      userId = null;
+      toast.success("Account successfully deleted");
+      disconnectSocket();
+    } catch (error) {
+      console.log("Error updating profile: " + error);
+      toast.error(error?.response?.data?.message);
+    } finally {
+      setIsDeletingAccount(false);
+    }
+  };
+
   const connectSocket = () => {
     if (!userId || socket) return;
 
@@ -130,6 +148,8 @@ export const AuthProvider = ({ children }) => {
         updateProfile,
         onlineUsers,
         socket,
+        deleteAccount,
+        isDeletingAccount,
       }}
     >
       {children}

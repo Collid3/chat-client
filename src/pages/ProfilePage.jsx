@@ -1,10 +1,16 @@
 import React, { useContext, useRef, useState } from "react";
 import AuthContext from "../context/AuthContext";
 import toast from "react-hot-toast";
-import { Camera, Mail, User } from "lucide-react";
+import { Camera, Loader, Mail, User } from "lucide-react";
 
 const ProfilePage = () => {
-  const { me, isUpdatingProfile, updateProfile } = useContext(AuthContext);
+  const {
+    me,
+    isUpdatingProfile,
+    updateProfile,
+    deleteAccount,
+    isDeletingAccount,
+  } = useContext(AuthContext);
   const [selectedImg, setSelectedImg] = useState(null);
   const imageRef = useRef(null);
 
@@ -22,7 +28,13 @@ const ProfilePage = () => {
     };
   };
 
-  console.log(me);
+  if (isDeletingAccount) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="size-10 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div data-theme="retro" className="min-h-screen pt-20">
@@ -108,6 +120,16 @@ const ProfilePage = () => {
                   <span className="text-green-500">Active</span>
                 </div>
               </div>
+
+              <button
+                className={`mt-2 px-8 py-2 ${
+                  isDeletingAccount ? "bg-orange-500" : "bg-red-700"
+                } rounded-md cursor-pointer hover:bg-red-500`}
+                onClick={deleteAccount}
+                disabled={isDeletingAccount}
+              >
+                {isDeletingAccount ? "Deleting account" : "Delete Account"}
+              </button>
             </div>
           </div>
         </div>
