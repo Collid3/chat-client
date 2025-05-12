@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import AuthContext from "../context/AuthContext";
 import toast from "react-hot-toast";
 import { Camera, Mail, User } from "lucide-react";
@@ -6,6 +6,7 @@ import { Camera, Mail, User } from "lucide-react";
 const ProfilePage = () => {
   const { me, isUpdatingProfile, updateProfile } = useContext(AuthContext);
   const [selectedImg, setSelectedImg] = useState(null);
+  const imageRef = useRef(null);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -21,6 +22,8 @@ const ProfilePage = () => {
     };
   };
 
+  console.log(me);
+
   return (
     <div data-theme="retro" className="min-h-screen pt-20">
       <div className="max-w-2xl mx-auto p-4 py-8">
@@ -32,7 +35,10 @@ const ProfilePage = () => {
 
           {/* Upload avatar section */}
           <div className="flex flex-col items-center gap-4">
-            <div className="relative">
+            <div
+              className="relative cursor-pointer hover:scale-95 transition-all duration-200"
+              onClick={() => imageRef.current.click()}
+            >
               <img
                 src={selectedImg || me.profilePicture || "/avatar.png"}
                 alt="Profile"
@@ -42,7 +48,7 @@ const ProfilePage = () => {
                 htmlFor="avatar-upload"
                 className={`
                   absolute bottom-0 right-0
-                  bg-base-content hover:scale-105
+                  bg-base-content
                   p-2 rounded-full cursor-pointer 
                   transition-all duration-200
                   ${
@@ -52,6 +58,7 @@ const ProfilePage = () => {
               >
                 <Camera className="w-5 h-5 text-base-200" />
                 <input
+                  ref={imageRef}
                   type="file"
                   id="avatar-upload"
                   className="hidden"

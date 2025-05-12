@@ -31,6 +31,10 @@ const LoginPage = () => {
     if (success === true) logIn(formData);
   };
 
+  const logInAsDemo = (data) => {
+    logIn(data);
+  };
+
   return (
     <div className="h-screen grid lg:grid-cols-2">
       {/* Left Side - Form */}
@@ -60,6 +64,26 @@ const LoginPage = () => {
               )}
             </button>
           </form>
+
+          <div className="flex gap-5 w-full">
+            <button
+              className="btn btn-warning"
+              onClick={() =>
+                logInAsDemo({ email: "demo1@gmail.com", password: "123456" })
+              }
+            >
+              Demo Account 1
+            </button>
+
+            <button
+              className="btn btn-success"
+              onClick={() =>
+                logInAsDemo({ email: "demo2@gmail.com", password: "123456" })
+              }
+            >
+              Demo Account 2
+            </button>
+          </div>
 
           <div className="text-center">
             <p className="text-base-content/60">
