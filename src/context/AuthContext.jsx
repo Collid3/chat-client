@@ -27,8 +27,7 @@ export const AuthProvider = ({ children }) => {
       setMe(response.data);
       userId = response.data._id;
       connectSocket();
-    } catch (error) {
-      console.log("Error in check auth: ", error);
+    } catch {
       setMe(null);
     } finally {
       setCheckingAuth(false);
