@@ -9,7 +9,7 @@ import AuthImagePattern from "../../components/AuthImagePattern";
 import toast from "react-hot-toast";
 
 const LoginPage = () => {
-  const { logIn, isLoggingIn } = useContext(AuthContext);
+  const { logIn, loggingIn } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -52,9 +52,9 @@ const LoginPage = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
-              disabled={isLoggingIn}
+              disabled={loggingIn}
             >
-              {isLoggingIn ? (
+              {loggingIn ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
                   Loading...
