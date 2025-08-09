@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { api } from "../api/axios";
+import api from "../api/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
@@ -55,7 +55,8 @@ export const AuthProvider = ({ children }) => {
     setLoggingIn(true);
     try {
       const response = await api.post("/auth/login", data);
-      setMe(response.data);
+      setMe(response.data.user);
+      localStorage.setItem("bright-chat-token", response.data.token);
       userId = response.data._id;
       connectSocket();
       toast.success("Logged in successfully");
@@ -69,9 +70,11 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await api.get("/auth/logout");
+      // await api.get("/auth/logout");
+      // setMe(null);
+      // userId = null;
       setMe(null);
-      userId = null;
+      localStorage.removeItem("bright-chat-token");
       toast.success("Logged out successfully");
       disconnectSocket();
     } catch (error) {

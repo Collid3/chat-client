@@ -1,7 +1,7 @@
 import "react";
 import axios from "axios";
 
-export const api = axios.create({
+const api = axios.create({
   baseURL: `${
     import.meta.env.VITE_ENV === "development"
       ? "http://localhost:5000/api"
@@ -9,3 +9,20 @@ export const api = axios.create({
   }`,
   withCredentials: true,
 });
+
+// Request Interceptor
+api.interceptors.request.use(
+  (config) => {
+    const accessToken = localStorage.getItem("bright-chat-token");
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export default api;

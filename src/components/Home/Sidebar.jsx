@@ -5,13 +5,15 @@ import { Users } from "lucide-react";
 import AuthContext from "../../context/AuthContext";
 
 const Sidebar = () => {
-  const { getUsers, users, selectedUser, setSelectedUser, loadingUsers } =
+  const { me, getUsers, users, selectedUser, setSelectedUser, loadingUsers } =
     useContext(ChatContext);
   const { onlineUsers } = useContext(AuthContext);
 
   useEffect(() => {
     getUsers();
-  }, []);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [me]);
 
   if (loadingUsers) return <SidebarSkeleton />;
 

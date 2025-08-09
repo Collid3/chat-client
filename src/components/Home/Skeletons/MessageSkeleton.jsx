@@ -13,8 +13,8 @@ const MessageSkeleton = () => {
             </div>
           </div>
 
-          <div className="chat-header mb-1">
-            <div className="skeloton h-4 w-16" />
+          <div className="chat-header bg-[--color-base-300] mb-1">
+            <div className="skeloton h-2 w-16" />
           </div>
 
           <div className="chat-bubble p-0">

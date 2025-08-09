@@ -19,6 +19,7 @@ const App = () => {
 
   useEffect(() => {
     checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (checkingAuth && !me) {
@@ -59,6 +60,8 @@ const App = () => {
           path="/profile"
           element={me ? <ProfilePage /> : <Navigate to="/" />}
         />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
       <Toaster />
