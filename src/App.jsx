@@ -17,13 +17,8 @@ const App = () => {
   const { me, checkAuth, checkingAuth } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     checkAuth();
-    if (!me) {
-      navigate("/");
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -65,8 +60,6 @@ const App = () => {
           path="/profile"
           element={me ? <ProfilePage /> : <Navigate to="/" />}
         />
-
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
       <Toaster />
