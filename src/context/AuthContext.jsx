@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [socket, setSocket] = useState(null);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const checkAuth = async () => {
     setCheckingAuth(true);
@@ -60,14 +61,15 @@ export const AuthProvider = ({ children }) => {
       connectSocket();
       toast.success("Logged in successfully");
     } catch (error) {
-      toast.error(error?.response?.data?.message);
-      console.log(error);
+      toast.error(error?.message);
+      console.log(error.message);
     } finally {
       setLoggingIn(false);
     }
   };
 
   const logout = async () => {
+    setLoggingOut(true);
     try {
       // await api.get("/auth/logout");
       // setMe(null);
@@ -78,6 +80,8 @@ export const AuthProvider = ({ children }) => {
       disconnectSocket();
     } catch (error) {
       toast.error(error?.response?.data?.message);
+    } finally {
+      setLoggingOut(false);
     }
   };
 
@@ -154,6 +158,7 @@ export const AuthProvider = ({ children }) => {
         socket,
         deleteAccount,
         isDeletingAccount,
+        loggingOut,
       }}
     >
       {children}

@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import { Link } from "react-router-dom";
-import { LogOut, MessageSquare, Settings, User } from "lucide-react";
+import { Loader2, LogOut, MessageSquare, Settings, User } from "lucide-react";
 
 const Navbar = () => {
-  const { me, logout } = useContext(AuthContext);
+  const { me, logout, loggingOut } = useContext(AuthContext);
 
   return (
     <header
@@ -43,10 +43,20 @@ backdrop-blur-lg bg-base-100/80"
                   <span className="hidden sm:inline">Profile</span>
                 </Link>
 
-                <button className="flex gap-2 items-center" onClick={logout}>
-                  <LogOut className="size-5" />
-                  <span className="hidden sm:inline">Logout</span>
-                </button>
+                {loggingOut ? (
+                  <button className="ml-1 flex gap-2 items-center">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Logging out...
+                  </button>
+                ) : (
+                  <button
+                    className="ml-1 flex gap-2 items-center"
+                    onClick={logout}
+                  >
+                    <LogOut className="size-5" />
+                    <span className="hidden sm:inline">Logout</span>
+                  </button>
+                )}
               </>
             )}
           </div>
