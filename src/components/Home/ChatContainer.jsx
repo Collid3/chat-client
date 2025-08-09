@@ -21,13 +21,14 @@ const ChatContainer = () => {
     subscribeToMessages();
 
     return () => unsubscribeFromMessages();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedUser]);
 
-  if (loadingMessages)
+  if (!loadingMessages)
     return (
       <div className="flex-1 flex flex-col overflow-auto">
         <ChatHeader />
-        <MessageSkeleton />;
+        <MessageSkeleton />
         <MessageInput />
       </div>
     );
