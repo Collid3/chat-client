@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Routes, Route, Navigate, Meta } from "react-router-dom";
+import { Routes, Route, Navigate, Meta, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/Auth/SignUpPage";
@@ -17,8 +17,13 @@ const App = () => {
   const { me, checkAuth, checkingAuth } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     checkAuth();
+    if (!me) {
+      navigate("/");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
