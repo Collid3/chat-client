@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post("/auth/login", data);
       setMe(response.data.user);
       localStorage.setItem("bright-chat-token", response.data.token);
-      userId = response.data._id;
+      userId = response.data.user._id;
       connectSocket();
       toast.success("Logged in successfully");
     } catch (error) {
@@ -122,6 +122,8 @@ export const AuthProvider = ({ children }) => {
     });
     Socket.connect();
     setSocket(Socket);
+
+    console.log("socket connected");
 
     Socket.on("getOnlineUsers", (userIds) => {
       return setOnlineUsers(userIds);

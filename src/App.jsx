@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Routes, Route, Navigate, Meta, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, Meta } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/Auth/SignUpPage";
@@ -14,7 +14,7 @@ import ThemeContext from "./context/ThemeContext";
 import { ChatProvider } from "./context/ChatContext";
 
 const App = () => {
-  const { me, checkAuth, checkingAuth } = useContext(AuthContext);
+  const { me, socket, checkAuth, checkingAuth } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (checkingAuth && !me) {
+  if ((checkingAuth && !me) || (me && !socket)) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />
